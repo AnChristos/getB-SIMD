@@ -6,13 +6,16 @@ Playground for using SIMD for the magnetic field cache interpolation
 Assuming you want also the google bench mark code
 
 ``git clone --recursive https://github.com/AnChristos/getB-SIMD.git``
+
 ``cd  cd getB-SIMD/``
+
 ``source buildGoogleBenchmark.sh``
 
 # Run the test
 Sanity test to see things working
 
 ``source build_test.sh ``
+
 ``./getB_test`` 
 
 Ouput
