@@ -5,7 +5,6 @@
 #include "BFieldCache.h"
 #include "vec.h"
 #include <cmath>
-
 #if defined(__GNUC__) && !defined(__clang__)
 #define ATH_ENABLE_FUNCTION_VECTORIZATION                                      \
   __attribute__((optimize("tree-vectorize")))

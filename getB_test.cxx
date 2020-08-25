@@ -11,6 +11,8 @@ constexpr int nmeshr{ 5 };
 constexpr int nmeshphi{ 6 };
 constexpr int nfield = nmeshz * nmeshr * nmeshphi;
 
+using dbl = std::numeric_limits< double >;
+
 struct BFieldData
 {
 
@@ -136,8 +138,10 @@ main()
                                -0.00165093 } };
 
   for (unsigned int i = 0; i < 10; ++i) {
-    double r1 = r0 + 5 + i * 10.;
 
+    std::cout.precision(dbl::max_digits10);
+    double r1 = r0 + 5 + i * 10.;
+    std::cout << '\n'<<" ----  r " << r1 <<" ----" << '\n';
     xyz[0] = r1 * cos(phi0);
     xyz[1] = r1 * sin(phi0);
     xyz[2] = z0;
@@ -150,33 +154,33 @@ main()
     cache3d.getB(xyz, r1, phi, bxyz, 0);
     std::cout << "get field std: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
               << '\n';
 
     cache3d.getBVec(xyz, r1, phi, bxyz, 0);
     std::cout << "get field Bvec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
               << '\n';
 
     cache3d.getBAutoVec(xyz, r1, phi, bxyz, 0);
     std::cout << "get field AutoVec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
               << '\n';
 
     cache3d.getBBothVec(xyz, r1, phi, bxyz, 0);
     std::cout << "get field BothVec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
               << '\n';
   }
 
