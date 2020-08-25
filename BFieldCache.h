@@ -59,6 +59,18 @@ public:
                double* ATH_RESTRICT B,
                double* ATH_RESTRICT deriv = nullptr) const;
 
+  void getBAutoVec(const double* ATH_RESTRICT xyz,
+                   double r,
+                   double phi,
+                   double* ATH_RESTRICT B,
+                   double* ATH_RESTRICT deriv) const;
+
+  void getBBothVec(const double* ATH_RESTRICT xyz,
+                   double r,
+                   double phi,
+                   double* ATH_RESTRICT B,
+                   double* ATH_RESTRICT deriv) const;
+
 private:
   alignas(32) double m_field[3][8]; // (Bz,Br,Bphi) at 8 corners of the bin
   // bin range in z
