@@ -4,15 +4,19 @@ Playground for using SIMD for the magnetic field cache interpolation
 # First clone/install
 
 Assuming you want also the google bench mark code
+
 ``git clone --recursive https://github.com/AnChristos/getB-SIMD.git``
 ``cd  cd getB-SIMD/``
 ``source buildGoogleBenchmark.sh``
 
 # Run the test
 Sanity test to see things working
+
 ``source build_test.sh ``
 ``./getB_test`` 
+
 Ouput
+
 ```
 get field std: i, bxyz 0 -2.83727e-07, 9.47007e-08, 0.00308551 fractional diff gt 10^-5: 0, 0, 0
 get field std: i, bxyz 1 -2.81403e-07, 7.49033e-08, 0.00255923 fractional diff gt 10^-5: 0, 0, 0
