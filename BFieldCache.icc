@@ -1,0 +1,60 @@
+/*
+  Copyright (C) 2002-2020 CERN for the benefit of the ATLAS collaboration
+*/
+#include <cmath>
+inline void
+BFieldCache::invalidate()
+{
+  m_phimin = 0.0;
+  m_phimax = -1.0;
+}
+inline void
+BFieldCache::setRange(double zmin,
+                      double zmax,
+                      double rmin,
+                      double rmax,
+                      double phimin,
+                      double phimax)
+{
+  m_zmin = zmin;
+  m_zmax = zmax;
+  m_rmin = rmin;
+  m_rmax = rmax;
+  m_phimin = phimin;
+  m_phimax = phimax;
+  m_invz = 1.0 / (zmax - zmin);
+  m_invr = 1.0 / (rmax - rmin);
+  m_invphi = 1.0 / (phimax - phimin);
+}
+
+// set field array, filled externally
+inline void
+BFieldCache::setField(double field[][8])
+{
+  std::copy(&field[0][0], &field[0][0] + 3 * 8, &m_field[0][0]);
+}
+
+inline void
+BFieldCache::setBscale(double bscale)
+{
+  m_scale = bscale;
+}
+
+inline float
+BFieldCache::bscale() const
+{
+  return m_scale;
+}
+
+inline bool
+BFieldCache::inside(double z, double r, double phi) const
+{
+  if (phi < m_phimin) {
+    phi += 2.0 * M_PI;
+  }
+  return (phi >= m_phimin && phi <= m_phimax && z >= m_zmin && z <= m_zmax &&
+          r >= m_rmin && r <= m_rmax);
+}
+
+
+
