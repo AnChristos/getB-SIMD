@@ -155,7 +155,7 @@ main()
               << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
               << '\n';
 
-    cache3d.getBvec(xyz, r1, phi, bxyz, 0);
+    cache3d.getBVec(xyz, r1, phi, bxyz, 0);
     std::cout << "get field Bvec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
               << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "

@@ -115,7 +115,7 @@ BFieldCache::getB(const double* ATH_RESTRICT xyz,
 
 /// Explicitly vectorized version
 void
-BFieldCache::getBvec(const double* ATH_RESTRICT xyz,
+BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
                      double r,
                      double phi,
                      double* ATH_RESTRICT B,

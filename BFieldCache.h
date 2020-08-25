@@ -53,7 +53,7 @@ public:
             double* ATH_RESTRICT B,
             double* ATH_RESTRICT deriv = nullptr) const;
 
-  void getBvec(const double* ATH_RESTRICT xyz,
+  void getBVec(const double* ATH_RESTRICT xyz,
                double r,
                double phi,
                double* ATH_RESTRICT B,

@@ -125,7 +125,7 @@ getB(benchmark::State& state)
 BENCHMARK(getB)->Range(8, 8<<10);
 
 void
-getBvec(benchmark::State& state)
+getBVec(benchmark::State& state)
 {
   BFieldData data{};
   double z{ 0 }, r{ 1250 }, phi{ 1.6 };
@@ -147,14 +147,14 @@ getBvec(benchmark::State& state)
   for (auto _ : state) {
     const int n = state.range(0);
     for (int range = 0; range < n; ++range) {
-      cache3d.getBvec(xyz, r1, phi, bxyz, nullptr);
+      cache3d.getBVec(xyz, r1, phi, bxyz, nullptr);
       benchmark::DoNotOptimize(&bxyz);
       benchmark::ClobberMemory();
     }
   }
 }
 
-BENCHMARK(getBvec)->Range(8, 8<<10);
+BENCHMARK(getBVec)->Range(8, 8<<10);
 
 void
 getBAutoVec(benchmark::State& state)
