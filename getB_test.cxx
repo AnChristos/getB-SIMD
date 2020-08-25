@@ -99,9 +99,6 @@ main()
   BFieldData data{};
   double z{ 0 }, r{ 1250 }, phi{ 1.6 };
 
-  // get field at steps of 10 mm from 1200 to 1300
-  int status{ 0 };
-
   double z0 = z;
   double r0 = 1200;
   double phi0 = phi;
@@ -147,11 +144,10 @@ main()
     // fill the cache, pass in current scale factor
     BFieldCache cache3d;
 
-
     // do interpolation (cache3d has correct scale factor)
     data.zone.getCache(z, r, phi, cache3d, 1);
-    cache3d.getB(xyz, r1, phi, bxyz, 0);
 
+    cache3d.getB(xyz, r1, phi, bxyz, 0);
     std::cout << "get field std: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
               << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
@@ -159,26 +155,30 @@ main()
               << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
               << '\n';
 
-    if (fabs(bxyz[0] - bxyz_std[0][i]) > 0.00001) {
-      std::cout << "failed bz comparison - bz, bz std " << bxyz[0] << ", "
-                << bxyz_std[0][i] << '\n';
-      status = 1;
-    }
-    if (fabs(bxyz[1] - bxyz_std[1][i]) > 0.00001) {
-      std::cout << "failed br comparison" << '\n';
-      std::cout << "failed br comparison - br, br std " << bxyz[1] << ", "
-                << bxyz_std[1][i] << '\n';
-      status = 1;
-    }
-    if (fabs(bxyz[2] - bxyz_std[2][i]) > 0.00001) {
-      std::cout << "failed bphi comparison" << '\n';
-      std::cout << "failed bphi comparison - bphi, bphi std " << bxyz[2] << ", "
-                << bxyz_std[2][i] << '\n';
-      status = 1;
-    }
-  }
+    cache3d.getBvec(xyz, r1, phi, bxyz, 0);
+    std::cout << "get field Bvec: i, bxyz " << i << " " << bxyz[0] << ", "
+              << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << '\n';
 
-  std::cout << "runTest: status " << status << '\n';
+    cache3d.getBAutoVec(xyz, r1, phi, bxyz, 0);
+    std::cout << "get field AutoVec: i, bxyz " << i << " " << bxyz[0] << ", "
+              << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << '\n';
+
+    cache3d.getBBothVec(xyz, r1, phi, bxyz, 0);
+    std::cout << "get field BothVec: i, bxyz " << i << " " << bxyz[0] << ", "
+              << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
+              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 0.00001) << ", "
+              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 0.00001) << ", "
+              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 0.00001)
+              << '\n';
+  }
 
   return 0;
 }
