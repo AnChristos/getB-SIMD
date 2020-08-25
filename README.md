@@ -21,6 +21,7 @@ Sanity test to see things working
 # Run the benchmark
 
 ``source buildBench.sh`` 
+
 ``./getB_bench``
 
 # What is included so far
