@@ -15,6 +15,7 @@ FIND_LIBRARY(GBENCH_LIB NAMES "benchmark"
 FIND_PATH(GBENCH_INCL NAMES "benchmark"
 	PATHS ${PROJECT_SOURCE_DIR}/benchmark/include )
 
+find_package (Threads)
 
 add_executable(getB_test 
 	       BFieldCache.cxx getB_test.cxx)
@@ -24,4 +25,5 @@ add_executable(getB_bench
 
 target_link_libraries(getB_bench PRIVATE "${GBENCH_LIB}")
 target_include_directories(getB_bench PRIVATE "${GBENCH_INCL}")
+target_link_libraries (getB_bench  PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
 
