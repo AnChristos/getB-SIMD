@@ -188,38 +188,6 @@ getBAutoVec(benchmark::State& state)
 
 BENCHMARK(getBAutoVec)->RangeMultiplier(2)->Range(1024,8192);
 
-void
-getBBothVec(benchmark::State& state)
-{
-  BFieldData data{};
-  double z{ 0 }, r{ 1250 }, phi{ 1.6 };
-  double z0 = z;
-  double r0 = 1200;
-  double phi0 = phi;
-  double xyz[3] = { 0, 0, 0 };
-  double bxyz[3] = { 0, 0, 0 };
-
-  double r1 = r0 + 5;
-  xyz[0] = r1 * cos(phi0);
-  xyz[1] = r1 * sin(phi0);
-  xyz[2] = z0;
-  // fill the cache, pass in current scale factor
-  BFieldCache cache3d;
-  // do interpolation (cache3d has correct scale factor)
-  data.zone.getCache(z, r, phi, cache3d, 1);
-
-  for (auto _ : state) {
-    const int n = state.range(0);
-    for (int range = 0; range < n; ++range) {
-      cache3d.getBBothVec(xyz, r1, phi, bxyz, nullptr);
-      benchmark::DoNotOptimize(&bxyz);
-      benchmark::ClobberMemory();
-    }
-  }
-}
-
-BENCHMARK(getBBothVec)->RangeMultiplier(2)->Range(1024,8192);
-
 
 
 // main

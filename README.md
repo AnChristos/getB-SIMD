@@ -33,7 +33,7 @@ Sanity test to see things working
 
 # What is included so far
 
+The code is compiled with O2 (as this is the flag used in the Athena project)
 1. Standard scalar getB code
 2. getB with a 1st attempt to vectorize by hand one loop
-3. Scalar code but enable auto vectorization in gcc
-4. Vectorize by hand and auto-vectorization in gcc
+3. Enable auto vectorization (relevant for  gcc -O2)
