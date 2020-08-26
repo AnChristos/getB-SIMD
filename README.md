@@ -24,6 +24,13 @@ Sanity test to see things working
 
 ``./getB_bench``
 
+#CMake
+
+``mkdir build; cd build``
+``cmake ../``
+``cmake``
+``./getB_bench``
+
 # What is included so far
 
 1. Standard scalar getB code
