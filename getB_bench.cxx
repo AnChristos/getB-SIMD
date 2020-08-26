@@ -122,7 +122,7 @@ getB(benchmark::State& state)
   }
 }
 
-BENCHMARK(getB)->Range(8, 8<<10);
+BENCHMARK(getB)->RangeMultiplier(2)->Range(1024,8192);
 
 void
 getBVec(benchmark::State& state)
@@ -154,7 +154,7 @@ getBVec(benchmark::State& state)
   }
 }
 
-BENCHMARK(getBVec)->Range(8, 8<<10);
+BENCHMARK(getBVec)->RangeMultiplier(2)->Range(1024,8192);
 
 void
 getBAutoVec(benchmark::State& state)
@@ -186,7 +186,7 @@ getBAutoVec(benchmark::State& state)
   }
 }
 
-BENCHMARK(getBAutoVec)->Range(8, 8<<10);
+BENCHMARK(getBAutoVec)->RangeMultiplier(2)->Range(1024,8192);
 
 void
 getBBothVec(benchmark::State& state)
@@ -218,7 +218,7 @@ getBBothVec(benchmark::State& state)
   }
 }
 
-BENCHMARK(getBBothVec)->Range(8, 8<<10);
+BENCHMARK(getBBothVec)->RangeMultiplier(2)->Range(1024,8192);
 
 
 
