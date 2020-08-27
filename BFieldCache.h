@@ -67,7 +67,6 @@ public:
 
 
 private:
-  alignas(32) double m_field[3][8]; // (Bz,Br,Bphi) at 8 corners of the bin
   // bin range in z
   double m_zmin = 0.0;
   double m_zmax = 0.0;
@@ -76,9 +75,13 @@ private:
   double m_rmax = 0.0;
   // bin range in phi
   double m_phimin = 0.0;
-  double m_phimax = -1.0;          // bin range in phi
-  double m_invz, m_invr, m_invphi; // 1/(bin size) in z, r, phi
+  double m_phimax = -1.0;         
+  // 1/(bin size) in z, r, phi
+  double m_invz;
+  double m_invr;
+  double m_invphi; 
   double m_scale;                  // unit of m_field in kT
+  alignas(16) double m_field[3][8]; // (Bz,Br,Bphi) at 8 corners of the bin
 };
 
 #include "BFieldCache.icc"
