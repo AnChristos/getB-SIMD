@@ -6,7 +6,7 @@ project(getB-SIMD VERSION 1.0)
 # C++ setting 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-add_compile_options(-Wall -Wextra -pedantic -Werror -O2)
+add_compile_options(-Wall -Wextra -pedantic -Werror -O2 -g)
 
 #google benchmark 
 FIND_LIBRARY(GBENCH_LIB NAMES "benchmark"

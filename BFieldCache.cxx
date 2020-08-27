@@ -139,32 +139,19 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
   const double scale = m_scale;
 
   // interpolate field values in z, r, phi
-  CxxUtils::vec<double, 2> interpCoeffphi1 = { gphi, fphi };
-  CxxUtils::vec<double, 2> interpCoeffphi2 = { gphi, fphi };
-  CxxUtils::vec<double, 2> interpCoeffphi3 = { gphi, fphi };
-  CxxUtils::vec<double, 2> interpCoeffphi4 = { gphi, fphi };
-
   std::array<double, 3> Bzrphi{};
+
+  CxxUtils::vec<double, 4> rInterCoeff = { gr, fr , gr, fr};
   for (int i = 0; i < 3; ++i) { // z, r, phi components
+    CxxUtils::vec<double, 4> field1 = { m_field[i][0], m_field[i][2], m_field[i][4], m_field[i][6] };
+    CxxUtils::vec<double, 4> field2 = { m_field[i][1], m_field[i][3],m_field[i][5], m_field[i][7] };
+    CxxUtils::vec<double, 4> gPhiM = field1 * gphi;
+    CxxUtils::vec<double, 4> fPhiM = field2 * fphi;
+    CxxUtils::vec<double, 4> interp = (gPhiM + fPhiM) * rInterCoeff;
 
-    CxxUtils::vec<double, 2> field1 = { m_field[i][0], m_field[i][1] };
-    CxxUtils::vec<double, 2> field2 = { m_field[i][2], m_field[i][3] };
-    CxxUtils::vec<double, 2> field3 = { m_field[i][4], m_field[i][5] };
-    CxxUtils::vec<double, 2> field4 = { m_field[i][6], m_field[i][7] };
-
-    CxxUtils::vec<double, 2> interp1 = field1 * interpCoeffphi1 * gr;
-
-    CxxUtils::vec<double, 2> interp2 = field2 * interpCoeffphi2 * fr;
-
-    CxxUtils::vec<double, 2> interp3 = field3 * interpCoeffphi3 * gr;
-
-    CxxUtils::vec<double, 2> interp4 = field4 * interpCoeffphi4 * fr;
-
-    CxxUtils::vec<double, 2> interp =
-      (gz * (interp1 + interp2) + fz * (interp3 + interp4));
-
-    Bzrphi[i] = scale * (interp[0] + interp[1]);
+    Bzrphi[i] = scale * ( (interp[0] + interp[1]) * gz + (interp[2] + interp[3]) * fz );
   }
+
 
   // convert (Bz,Br,Bphi) to (Bx,By,Bz)
   double invr;
