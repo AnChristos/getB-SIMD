@@ -133,7 +133,7 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
 
   CxxUtils::vec<double, 4> rInterCoeff = { gr, fr, gr, fr };
 
-  // Load  z
+  // Load  Bz at 8 corners of the bin
   CxxUtils::vec<double, 4> field1_z = {
     m_field[0][0], m_field[0][1], m_field[0][2], m_field[0][3]
   };
@@ -141,7 +141,7 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     m_field[0][4], m_field[0][5], m_field[0][6], m_field[0][7]
   };
 
-  // Load r
+  // Load Br at 8 corners of the bin
   CxxUtils::vec<double, 4> field1_r = {
     m_field[1][0], m_field[1][1], m_field[1][2], m_field[1][3]
   };
@@ -149,7 +149,7 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     m_field[1][4], m_field[1][5], m_field[1][6], m_field[1][7]
   };
 
-  // Load phi
+  // Load Bphi at 8 corners of the bin
   CxxUtils::vec<double, 4> field1_phi = {
     m_field[2][0], m_field[2][1], m_field[2][2], m_field[2][3]
   };
@@ -157,7 +157,16 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     m_field[2][4], m_field[2][5], m_field[2][6], m_field[2][7]
   };
 
-  // Do the 1st stage of the interpolation for each
+  // Do the 1st stage of the interpolation of Bz,Br,Bphi
+  // inside the z,r,phi bin.
+  //
+  //  We end up with
+  //  3 z,r,phi x size 4 SIMD vectors :
+  //  Each vector entries are
+  //  0 gr * (gphi * field[0] + fphi * field[4]) ,
+  //  1 fr * (gphi * field[1] + fphi * field[5]) ,
+  //  2 gr * (gphi * field[2] + fphi * field[6]) ,
+  //  3 fr * (gphi * field[3] + fphi * field[7]) ,
   CxxUtils::vec<double, 4> gPhiM_z = field1_z * gphi;
   CxxUtils::vec<double, 4> fPhiM_z = field2_z * fphi;
   CxxUtils::vec<double, 4> interp_z = (gPhiM_z + fPhiM_z) * rInterCoeff;
@@ -171,23 +180,22 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
   CxxUtils::vec<double, 4> interp_phi = (gPhiM_phi + fPhiM_phi) * rInterCoeff;
 
 
-  //do the final step for all r,phi,z
+  //4 simd vector of 3 entries r,z,phi
+  //Since we want to retain also binary compatibility
   CxxUtils::vec<double, 4> Bzrphivec0 = {
     interp_z[0], interp_r[0], interp_phi[0], 0
   };
-
   CxxUtils::vec<double, 4> Bzrphivec1 = {
     interp_z[1], interp_r[1], interp_phi[1], 0
   };
-
   CxxUtils::vec<double, 4> Bzrphivec2 = {
     interp_z[2], interp_r[2], interp_phi[2], 0
   };
-
   CxxUtils::vec<double, 4> Bzrphivec3 = {
     interp_z[3], interp_r[3], interp_phi[3], 0
   };
 
+  //Do the final interpolation ster for all 3 Bz,Br,Bphi
   CxxUtils::vec<double, 4> Bzrphi1 = (Bzrphivec0 + Bzrphivec1) * gz;
   CxxUtils::vec<double, 4> Bzrphi2 = (Bzrphivec2 + Bzrphivec3) * fz;
   CxxUtils::vec<double, 4> Bzrphi = (Bzrphi1 + Bzrphi2) * m_scale;
