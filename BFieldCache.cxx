@@ -80,7 +80,7 @@ BFieldCache::getB(const double* ATH_RESTRICT xyz,
       dBdphi[j] =
         sphi * (gz * (gr * (field[4] - field[0]) + fr * (field[5] - field[1])) +
                 fz * (gr * (field[6] - field[2]) + fr * (field[7] - field[3])));
-   }
+    }
     // convert to cartesian coordinates
     const double cc = c * c;
     const double cs = c * s;
@@ -130,22 +130,67 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
   const double gr = 1.0 - fr;
   const double fphi = (phi - m_phimin) * m_invphi;
   const double gphi = 1.0 - fphi;
-  const double scale = m_scale;
 
-  // interpolate field values in z, r, phi
-  std::array<double, 3> Bzrphi{};
+  CxxUtils::vec<double, 4> rInterCoeff = { gr, fr, gr, fr };
 
-  CxxUtils::vec<double, 4> rInterCoeff = { gr, fr , gr, fr};
-  for (int i = 0; i < 3; ++i) { // z, r, phi components
-    CxxUtils::vec<double, 4> field1 = { m_field[i][0], m_field[i][1], m_field[i][2], m_field[i][3] };
-    CxxUtils::vec<double, 4> field2 = { m_field[i][4], m_field[i][5],m_field[i][6], m_field[i][7] };
-    CxxUtils::vec<double, 4> gPhiM = field1 * gphi;
-    CxxUtils::vec<double, 4> fPhiM = field2 * fphi;
-    CxxUtils::vec<double, 4> interp = (gPhiM + fPhiM) * rInterCoeff;
+  // Load  z
+  CxxUtils::vec<double, 4> field1_z = {
+    m_field[0][0], m_field[0][1], m_field[0][2], m_field[0][3]
+  };
+  CxxUtils::vec<double, 4> field2_z = {
+    m_field[0][4], m_field[0][5], m_field[0][6], m_field[0][7]
+  };
 
-    Bzrphi[i] = scale * ( (interp[0] + interp[1]) * gz + (interp[2] + interp[3]) * fz );
-  }
+  // Load r
+  CxxUtils::vec<double, 4> field1_r = {
+    m_field[1][0], m_field[1][1], m_field[1][2], m_field[1][3]
+  };
+  CxxUtils::vec<double, 4> field2_r = {
+    m_field[1][4], m_field[1][5], m_field[1][6], m_field[1][7]
+  };
 
+  // Load phi
+  CxxUtils::vec<double, 4> field1_phi = {
+    m_field[2][0], m_field[2][1], m_field[2][2], m_field[2][3]
+  };
+  CxxUtils::vec<double, 4> field2_phi = {
+    m_field[2][4], m_field[2][5], m_field[2][6], m_field[2][7]
+  };
+
+  // Do the 1st stage of the interpolation for each
+  CxxUtils::vec<double, 4> gPhiM_z = field1_z * gphi;
+  CxxUtils::vec<double, 4> fPhiM_z = field2_z * fphi;
+  CxxUtils::vec<double, 4> interp_z = (gPhiM_z + fPhiM_z) * rInterCoeff;
+
+  CxxUtils::vec<double, 4> gPhiM_r = field1_r * gphi;
+  CxxUtils::vec<double, 4> fPhiM_r = field2_r * fphi;
+  CxxUtils::vec<double, 4> interp_r = (gPhiM_r + fPhiM_r) * rInterCoeff;
+
+  CxxUtils::vec<double, 4> gPhiM_phi = field1_phi * gphi;
+  CxxUtils::vec<double, 4> fPhiM_phi = field2_phi * fphi;
+  CxxUtils::vec<double, 4> interp_phi = (gPhiM_phi + fPhiM_phi) * rInterCoeff;
+
+
+  //do the final step for all r,phi,z
+  CxxUtils::vec<double, 4> Bzrphivec0 = {
+    interp_z[0], interp_r[0], interp_phi[0], 0
+  };
+
+  CxxUtils::vec<double, 4> Bzrphivec1 = {
+    interp_z[1], interp_r[1], interp_phi[1], 0
+  };
+
+  CxxUtils::vec<double, 4> Bzrphivec2 = {
+    interp_z[2], interp_r[2], interp_phi[2], 0
+  };
+
+  CxxUtils::vec<double, 4> Bzrphivec3 = {
+    interp_z[3], interp_r[3], interp_phi[3], 0
+  };
+
+  CxxUtils::vec<double, 4> Bzrphi1 = (Bzrphivec0 + Bzrphivec1) * gz;
+  CxxUtils::vec<double, 4> Bzrphi2 = (Bzrphivec2 + Bzrphivec3) * fz;
+  CxxUtils::vec<double, 4> Bzrphi = (Bzrphi1 + Bzrphi2) * m_scale;
 
   // convert (Bz,Br,Bphi) to (Bx,By,Bz)
   double invr;
@@ -211,5 +256,4 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     deriv[8] = dBdz[0];
   }
 }
-
 
