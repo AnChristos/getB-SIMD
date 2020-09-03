@@ -11,7 +11,7 @@ constexpr int nmeshr{ 5 };
 constexpr int nmeshphi{ 6 };
 constexpr int nfield = nmeshz * nmeshr * nmeshphi;
 
-using dbl = std::numeric_limits< double >;
+using dbl = std::numeric_limits<double>;
 
 struct BFieldData
 {
@@ -106,42 +106,12 @@ main()
   double phi0 = phi;
   double xyz[3] = { 0, 0, 0 };
   double bxyz[3] = { 0, 0, 0 };
-  double bxyz_std[3][10] = { { -2.83727e-07,
-                               -2.81403e-07,
-                               -2.79079e-07,
-                               -2.76755e-07,
-                               -2.74431e-07,
-                               -2.72107e-07,
-                               -2.69782e-07,
-                               -2.67458e-07,
-                               -2.65134e-07,
-                               -2.6281e-07 },
-                             { 9.47007e-08,
-                               7.49033e-08,
-                               5.51058e-08,
-                               3.53084e-08,
-                               1.5511e-08,
-                               -4.28645e-09,
-                               -2.40839e-08,
-                               -4.38813e-08,
-                               -6.36787e-08,
-                               -8.34762e-08 },
-                             { 0.00308551,
-                               0.00255923,
-                               0.00203296,
-                               0.00150669,
-                               0.000980422,
-                               0.000454151,
-                               -7.21201e-05,
-                               -0.000598391,
-                               -0.00112466,
-                               -0.00165093 } };
-
+  double derivatives[9] = { 0 };
   for (unsigned int i = 0; i < 10; ++i) {
 
     std::cout.precision(dbl::max_digits10);
     double r1 = r0 + 5 + i * 10.;
-    std::cout << '\n'<<" ----  r " << r1 <<" ----" << '\n';
+    std::cout << '\n' << " ----  r " << r1 << " ----" << '\n';
     xyz[0] = r1 * cos(phi0);
     xyz[1] = r1 * sin(phi0);
     xyz[2] = z0;
@@ -151,22 +121,25 @@ main()
     // do interpolation (cache3d has correct scale factor)
     data.zone.getCache(z, r, phi, cache3d, 1);
 
-    cache3d.getB(xyz, r1, phi, bxyz, nullptr);
+    cache3d.getB(xyz, r1, phi, bxyz, derivatives);
     std::cout << "get field std: i, bxyz " << i << " " << bxyz[0] << ", "
-              << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
-              << '\n';
+              << bxyz[1] << ", " << bxyz[2] << '\n';
 
-    cache3d.getBVec(xyz, r1, phi, bxyz, nullptr);
-    std::cout << "get field Bvec: i, bxyz " << i << " " << bxyz[0] << ", "
-              << bxyz[1] << ", " << bxyz[2] << " fractional diff gt 10^-5: "
-              << int(fabs(bxyz[0] - bxyz_std[0][i]) / bxyz[0] > 1e-5) << ", "
-              << int(fabs(bxyz[1] - bxyz_std[1][i]) / bxyz[1] > 1e-5) << ", "
-              << int(fabs(bxyz[2] - bxyz_std[2][i]) / bxyz[2] > 1e-5)
-              << '\n';
+    std::cout << "get field std: i, derivatives " << i << " " << derivatives[0]
+              << ", " << derivatives[1] << ", " << derivatives[2] << ", "
+              << derivatives[3] << ", " << derivatives[4] << ", "
+              << derivatives[5] << ", " << derivatives[6] << ", "
+              << derivatives[7] << ", " << derivatives[8] << '\n';
 
+    cache3d.getBVec(xyz, r1, phi, bxyz, derivatives);
+    std::cout << "get field vec: i, bxyz " << i << " " << bxyz[0] << ", "
+              << bxyz[1] << ", " << bxyz[2] << '\n';
+
+    std::cout << "get field std: i, derivatives " << i << " " << derivatives[0]
+              << ", " << derivatives[1] << ", " << derivatives[2] << ", "
+              << derivatives[3] << ", " << derivatives[4] << ", "
+              << derivatives[5] << ", " << derivatives[6] << ", "
+              << derivatives[7] << ", " << derivatives[8] << '\n';
   }
 
   return 0;
