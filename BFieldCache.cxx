@@ -6,16 +6,6 @@
 #include "vec.h"
 #include <cmath>
 
-#if defined(__GNUC__) && !defined(__clang__) && !defined(__ICC) &&             \
-  !defined(__COVERITY__) && !defined(__CUDACC__)
-#define ATH_ENABLE_VECTORIZATION                                               \
-  _Pragma("GCC optimize (\"tree-vectorize\")") class                           \
-    ATH_ENABLE_VECTORIZATION_SWALLOW_SEMICOLON
-#else
-#define ATH_ENABLE_VECTORIZATION                                               \
-  class ATH_ENABLE_VECTORIZATION_SWALLOW_SEMICOLON
-#endif
-//ATH_ENABLE_VECTORIZATION;
 /// existing method
 void
 BFieldCache::getB(const double* ATH_RESTRICT xyz,
@@ -116,8 +106,6 @@ BFieldCache::getB(const double* ATH_RESTRICT xyz,
   }
 }
 
-/// Explicitly vectorized version
-__attribute__((optimize("tree-vectorize")))
 void
 BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
                      double r,
