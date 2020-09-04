@@ -223,20 +223,37 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     std::array<double, 3> dBdz;
     std::array<double, 3> dBdr;
     std::array<double, 3> dBdphi;
-
+    CxxUtils::vec<double, 2> rDerivCoeff = { gr, fr};
+    CxxUtils::vec<double, 2> zDerivCoeff = { gz, fz};
     for (int j = 0; j < 3; ++j) { // Bz, Br, Bphi components
       const double* field = m_field[j];
-      dBdz[j] =
-        sz *
-        (gr * (gphi * (field[2] - field[0]) + fphi * (field[6] - field[4])) +
-         fr * (gphi * (field[3] - field[1]) + fphi * (field[7] - field[5])));
-      dBdr[j] =
-        sr *
-        (gz * (gphi * (field[1] - field[0]) + fphi * (field[5] - field[4])) +
-         fz * (gphi * (field[3] - field[2]) + fphi * (field[7] - field[6])));
-      dBdphi[j] =
-        sphi * (gz * (gr * (field[4] - field[0]) + fr * (field[5] - field[1])) +
-                fz * (gr * (field[6] - field[2]) + fr * (field[7] - field[3])));
+
+      CxxUtils::vec<double, 2> field23 = { field[2], field[3] };
+      CxxUtils::vec<double, 2> field01 = { field[0], field[1] };
+      CxxUtils::vec<double, 2> field67 = { field[6], field[7] };
+      CxxUtils::vec<double, 2> field45 = { field[4], field[5] };
+
+      CxxUtils::vec<double, 2> field13 = { field[1], field[3] };
+      CxxUtils::vec<double, 2> field02 = { field[0], field[2] };
+      CxxUtils::vec<double, 2> field57 = { field[5], field[7] };
+      CxxUtils::vec<double, 2> field46 = { field[4], field[6] };
+
+      CxxUtils::vec<double, 2> field23_01gphi_p_67_45fphi =
+        gphi * (field23 - field01) + fphi * (field67 - field45);
+
+      CxxUtils::vec<double, 2> field13_02gphi_p_57_46fphi =
+        gphi * (field13 - field02) + fphi * (field57 - field46);
+
+      CxxUtils::vec<double, 2> field46_02gr_p_57_13fr =
+        gr * (field46 - field02) + fr * (field57 - field13);
+
+      CxxUtils::vec<double, 2> dBdz1 = rDerivCoeff*field23_01gphi_p_67_45fphi;
+      CxxUtils::vec<double, 2> dBdr1 = zDerivCoeff*field13_02gphi_p_57_46fphi;
+      CxxUtils::vec<double, 2> dBdphi1 = zDerivCoeff*field46_02gr_p_57_13fr;
+
+      dBdz[j] = sz*(dBdz1[0]+dBdz1[1]);
+      dBdr[j] = sr*(dBdr1[0]+dBdr1[1]);
+      dBdphi[j] = sphi*(dBdphi1[0]+dBdphi1[1]);
     }
     // convert to cartesian coordinates
     const double cc = c * c;

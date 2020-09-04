@@ -135,7 +135,7 @@ main()
     std::cout << "get field vec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << '\n';
 
-    std::cout << "get field std: i, derivatives " << i << " " << derivatives[0]
+    std::cout << "get field vec: i, derivatives " << i << " " << derivatives[0]
               << ", " << derivatives[1] << ", " << derivatives[2] << ", "
               << derivatives[3] << ", " << derivatives[4] << ", "
               << derivatives[5] << ", " << derivatives[6] << ", "
