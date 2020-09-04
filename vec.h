@@ -181,27 +181,50 @@ vmax(VEC& dst, const VEC& a, const VEC& b)
   dst = a > b ? a : b;
 #endif
 }
+/*
+ * Need for static asserts on argument
+ * packs
+ */
+namespace bool_pack_helper {
+template<bool...>
+struct bool_pack;
+template<bool... bs>
+using all_true = std::is_same<bool_pack<bs..., true>, bool_pack<true, bs...>>;
+}
+
 
 /**
  * @brief vpermute function.
- * move any element of a vector src into any or multiple position inside dst,
- * Follows the GCC __builtin_shuffle(vec,mask) conventions,
- * therefore the elements of mask are considered modulo N
+ * move any element of a vector src
+ * into any or multiple position inside dst.
+ *
+ * We try to wrap both
+ * gcc's __builtin_shuffle
+ * and
+ * clang's __builtin_shufflevector
+ *
  */
-template<typename VEC>
+template<size_t... Indices, typename VEC>
 inline void
-vpermute(VEC& dst, const VEC& src, const mask_type_t<VEC>& mask)
+vpermute(VEC& dst, const VEC& src)
 {
-#if defined(__clang__) || !HAVE_VECTOR_SIZE_ATTRIBUTE
-  // clang can vectorize this at O2
+
   constexpr size_t N = vec_size<VEC>();
-  for (size_t i = 0; i < N; ++i) {
-    dst[i] = src[mask[i] % N];
-  }
+  static_assert((sizeof...(Indices) == N),
+                "Number of indices different than vector size");
+  static_assert(
+    bool_pack_helper::all_true<(Indices >= 0 && Indices < N)...>::value,
+    "permute indices outside allowed range");
+
+#if !HAVE_VECTOR_SIZE_ATTRIBUTE || WANT_VECTOR_FALLBACK
+  dst = VEC{ src[Indices]... };
+#elif defined(__clang__)
+  dst = __builtin_shufflevector(src, src, Indices...);
 #else // gcc
-  dst = __builtin_shuffle(src, mask);
+  dst = __builtin_shuffle(src, mask_type_t<VEC>{ Indices... });
 #endif
 }
+
 }
 
 #endif
