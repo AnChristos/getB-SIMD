@@ -39,4 +39,3 @@ Sanity test to see things working
 The code is compiled with O2 (as this is the flag used in the Athena project)
 1. Standard scalar getB code
 2. getB with a 1st attempt to vectorize by hand one loop
-3. Enable auto vectorization (relevant for  gcc -O2)
