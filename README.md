@@ -7,7 +7,7 @@ Assuming you want also the google bench mark code
 
 ``git clone --recursive https://github.com/AnChristos/getB-SIMD.git``
 
-``cd  cd getB-SIMD/``
+``cd getB-SIMD/``
 
 ``source buildGoogleBenchmark.sh``
 
