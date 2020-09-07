@@ -27,8 +27,11 @@ Sanity test to see things working
 #CMake
 
 ``mkdir build; cd build``
+
 ``cmake ../``
+
 ``cmake``
+
 ``./getB_bench``
 
 # What is included so far
