@@ -175,26 +175,16 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
   //  3 :3 fr * (gphi * field[3] + fphi * field[7]) ,
 
   // We want to retain also binary compatibility
-  // Switch to 4 vector of 3 entries (z,r,phi)
-
-  CxxUtils::vec<double, 4> Bzrphivec0 = {
-    interp_z[0], interp_r[0], interp_phi[0], 0
+  // Switch to 2 vector of 3 entries (z,r,phi)
+  CxxUtils::vec<double, 4> BzrphiVec1= {
+    interp_z[0]+interp_z[1], interp_r[0]+interp_r[1], interp_phi[0]+interp_phi[1], 0
   };
-  CxxUtils::vec<double, 4> Bzrphivec1 = {
-    interp_z[1], interp_r[1], interp_phi[1], 0
-  };
-  CxxUtils::vec<double, 4> Bzrphivec2 = {
-    interp_z[2], interp_r[2], interp_phi[2], 0
-  };
-  CxxUtils::vec<double, 4> Bzrphivec3 = {
-    interp_z[3], interp_r[3], interp_phi[3], 0
+  CxxUtils::vec<double, 4> BzrphiVec2= {
+    interp_z[2]+interp_z[3], interp_r[2]+interp_r[3], interp_phi[2]+interp_phi[3], 0
   };
 
-  // Do the final interpolation ster for all 3 Bz,Br,Bphi
-  CxxUtils::vec<double, 4> Bzrphi1 = (Bzrphivec0 + Bzrphivec1) * gz;
-  CxxUtils::vec<double, 4> Bzrphi2 = (Bzrphivec2 + Bzrphivec3) * fz;
   // now create the final (r,z,phi) values
-  CxxUtils::vec<double, 4> Bzrphi = (Bzrphi1 + Bzrphi2) * m_scale;
+  CxxUtils::vec<double, 4> Bzrphi = (BzrphiVec1*gz  +  BzrphiVec2*fz) * m_scale;
 
   // convert (Bz,Br,Bphi) to (Bx,By,Bz)
   double invr;
@@ -219,42 +209,25 @@ BFieldCache::getBVec(const double* ATH_RESTRICT xyz,
     const double sz = m_scale * m_invz;
     const double sr = m_scale * m_invr;
     const double sphi = m_scale * m_invphi;
-
     std::array<double, 3> dBdz;
     std::array<double, 3> dBdr;
     std::array<double, 3> dBdphi;
-    CxxUtils::vec<double, 2> rDerivCoeff = { gr, fr};
-    CxxUtils::vec<double, 2> zDerivCoeff = { gz, fz};
+
     for (int j = 0; j < 3; ++j) { // Bz, Br, Bphi components
       const double* field = m_field[j];
-
-      CxxUtils::vec<double, 2> field23 = { field[2], field[3] };
-      CxxUtils::vec<double, 2> field01 = { field[0], field[1] };
-      CxxUtils::vec<double, 2> field67 = { field[6], field[7] };
-      CxxUtils::vec<double, 2> field45 = { field[4], field[5] };
-
-      CxxUtils::vec<double, 2> field13 = { field[1], field[3] };
-      CxxUtils::vec<double, 2> field02 = { field[0], field[2] };
-      CxxUtils::vec<double, 2> field57 = { field[5], field[7] };
-      CxxUtils::vec<double, 2> field46 = { field[4], field[6] };
-
-      CxxUtils::vec<double, 2> field23_01gphi_p_67_45fphi =
-        gphi * (field23 - field01) + fphi * (field67 - field45);
-
-      CxxUtils::vec<double, 2> field13_02gphi_p_57_46fphi =
-        gphi * (field13 - field02) + fphi * (field57 - field46);
-
-      CxxUtils::vec<double, 2> field46_02gr_p_57_13fr =
-        gr * (field46 - field02) + fr * (field57 - field13);
-
-      CxxUtils::vec<double, 2> dBdz1 = rDerivCoeff*field23_01gphi_p_67_45fphi;
-      CxxUtils::vec<double, 2> dBdr1 = zDerivCoeff*field13_02gphi_p_57_46fphi;
-      CxxUtils::vec<double, 2> dBdphi1 = zDerivCoeff*field46_02gr_p_57_13fr;
-
-      dBdz[j] = sz*(dBdz1[0]+dBdz1[1]);
-      dBdr[j] = sr*(dBdr1[0]+dBdr1[1]);
-      dBdphi[j] = sphi*(dBdphi1[0]+dBdphi1[1]);
+      dBdz[j] =
+        sz *
+        (gr * (gphi * (field[2] - field[0]) + fphi * (field[6] - field[4])) +
+         fr * (gphi * (field[3] - field[1]) + fphi * (field[7] - field[5])));
+      dBdr[j] =
+        sr *
+        (gz * (gphi * (field[1] - field[0]) + fphi * (field[5] - field[4])) +
+         fz * (gphi * (field[3] - field[2]) + fphi * (field[7] - field[6])));
+      dBdphi[j] =
+        sphi * (gz * (gr * (field[4] - field[0]) + fr * (field[5] - field[1])) +
+                fz * (gr * (field[6] - field[2]) + fr * (field[7] - field[3])));
     }
+
     // convert to cartesian coordinates
     const double cc = c * c;
     const double cs = c * s;
