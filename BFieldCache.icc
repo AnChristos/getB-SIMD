@@ -37,9 +37,9 @@ BFieldCache::setField(double field[][8])
 
 // set field array, filled externally
 inline void
-BFieldCache::setFieldVec(CxxUtils::vec<double, 8> field1,
-                         CxxUtils::vec<double, 8> field2,
-                         CxxUtils::vec<double, 8> field3)
+BFieldCache::setFieldVec(const CxxUtils::vec<double, 8>& field1,
+                         const CxxUtils::vec<double, 8>& field2,
+                         const CxxUtils::vec<double, 8>& field3)
 {
   CxxUtils::vstore(&m_field[0][0], field1);
   CxxUtils::vstore(&m_field[1][0], field2);

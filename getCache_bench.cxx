@@ -97,16 +97,6 @@ getCache(benchmark::State& state)
 {
   BFieldData data{};
   double z{ 0 }, r{ 1250 }, phi{ 1.6 };
-  double z0 = z;
-  double r0 = 1200;
-  double phi0 = phi;
-  double xyz[3] = { 0, 0, 0 };
-
-  double r1 = r0 + 5;
-  xyz[0] = r1 * cos(phi0);
-  xyz[1] = r1 * sin(phi0);
-  xyz[2] = z0;
-
   // fill the cache, pass in current scale factor
   for (auto _ : state) {
     const int n = state.range(0);
@@ -127,15 +117,6 @@ getCacheVec(benchmark::State& state)
 {
   BFieldData data{};
   double z{ 0 }, r{ 1250 }, phi{ 1.6 };
-  double z0 = z;
-  double r0 = 1200;
-  double phi0 = phi;
-  double xyz[3] = { 0, 0, 0 };
-
-  double r1 = r0 + 5;
-  xyz[0] = r1 * cos(phi0);
-  xyz[1] = r1 * sin(phi0);
-  xyz[2] = z0;
   // fill the cache, pass in current scale factor
   for (auto _ : state) {
     const int n = state.range(0);

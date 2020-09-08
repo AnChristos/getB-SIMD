@@ -40,9 +40,9 @@ public:
   void setField(double field[][8]);
 
   // set field array, filled externally
-  void setFieldVec(CxxUtils::vec<double,8> field1,
-                   CxxUtils::vec<double,8> field2,
-                   CxxUtils::vec<double,8> field3);
+  void setFieldVec(const CxxUtils::vec<double,8>& field1,
+                   const CxxUtils::vec<double,8>& field2,
+                   const CxxUtils::vec<double,8>& field3);
 
 
   // set the multiplicative factor for the field vectors
