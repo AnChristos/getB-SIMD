@@ -117,7 +117,6 @@ main()
     xyz[2] = z0;
     // fill the cache, pass in current scale factor
     BFieldCache cache3d;
-
     // do interpolation (cache3d has correct scale factor)
     data.zone.getCache(z, r, phi, cache3d, 1);
 
@@ -131,7 +130,14 @@ main()
               << derivatives[5] << ", " << derivatives[6] << ", "
               << derivatives[7] << ", " << derivatives[8] << '\n';
 
-    cache3d.getBVec(xyz, r1, phi, bxyz, derivatives);
+
+    // fill the cache, pass in current scale factor
+    BFieldCache cache3dVec;
+    // do interpolation (cache3d has correct scale factor)
+    data.zone.getCacheVec(z, r, phi, cache3dVec, 1);
+
+
+    cache3dVec.getBVec(xyz, r1, phi, bxyz, derivatives);
     std::cout << "get field vec: i, bxyz " << i << " " << bxyz[0] << ", "
               << bxyz[1] << ", " << bxyz[2] << '\n';
 

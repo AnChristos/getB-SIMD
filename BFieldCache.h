@@ -19,7 +19,7 @@
 
 #define ATH_RESTRICT __restrict__
 #include "BFieldVector.h"
-
+#include "vec.h"
 class BFieldCache
 {
 public:
@@ -38,6 +38,12 @@ public:
 
   // set field array, filled externally
   void setField(double field[][8]);
+
+  // set field array, filled externally
+  void setFieldVec(CxxUtils::vec<double,8> field1,
+                   CxxUtils::vec<double,8> field2,
+                   CxxUtils::vec<double,8> field3);
+
 
   // set the multiplicative factor for the field vectors
   void setBscale(double bscale);

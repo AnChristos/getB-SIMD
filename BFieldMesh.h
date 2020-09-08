@@ -78,10 +78,14 @@ public:
                 double phi,
                 BFieldCache& cache,
                 double scaleFactor = 1.0) const;
-  // get the B field
-  void getB(const double* ATH_RESTRICT xyz,
-            double* ATH_RESTRICT B,
-            double* ATH_RESTRICT deriv = nullptr) const;
+
+  // find the bin
+  void getCacheVec(double z,
+                double r,
+                double phi,
+                BFieldCache& cache,
+                double scaleFactor = 1.0) const;
+ 
   // accessors
   double min(size_t i) const { return m_min[i]; }
   double max(size_t i) const { return m_max[i]; }
