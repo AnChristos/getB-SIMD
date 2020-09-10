@@ -11,31 +11,20 @@ Assuming you want also the google bench mark code
 
 ``source buildGoogleBenchmark.sh``
 
-# Run the test
-Sanity test to see things working
+otherwise 
 
-``source build_test.sh ``
-
-``./getB_test`` 
-
-# Run the benchmark
-
-``source buildBench.sh`` 
-
-``./getB_bench``
+``git clone https://github.com/AnChristos/getB-SIMD.git``
 
 #CMake
 
 ``mkdir build; cd build``
 
-``cmake ../``
+``cmake ../getB-SIMD``
 
 ``cmake``
 
-``./getB_bench``
 
-# What is included so far
+# Example 
 
-The code is compiled with O2 (as this is the flag used in the Athena project)
-1. Standard scalar getB code
-2. getB with a 1st attempt to vectorize by hand one loop
+``./get_Bbench --benchmark_report_aggregates_only=true --benchmark_repetitions=20``
+
