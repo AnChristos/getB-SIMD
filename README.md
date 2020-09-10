@@ -1,7 +1,7 @@
 # getB-SIMD
 Playground for using SIMD for the magnetic field cache interpolation
 
-# First clone/install
+# Clone
 
 Assuming you want also the google bench mark code
 
@@ -15,7 +15,7 @@ otherwise
 
 ``git clone https://github.com/AnChristos/getB-SIMD.git``
 
-#CMake
+# Build code with CMake 
 
 ``mkdir build; cd build``
 
