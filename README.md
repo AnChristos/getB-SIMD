@@ -35,5 +35,5 @@ to change location
 
 # Example 
 
-``./get_Bbench --benchmark_report_aggregates_only=true --benchmark_repetitions=20``
+``./getB_bench --benchmark_report_aggregates_only=true --benchmark_repetitions=20``
 
