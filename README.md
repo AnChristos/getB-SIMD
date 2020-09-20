@@ -4,7 +4,7 @@ Playground for using SIMD for the magnetic field cache interpolation
 
 # If you have already google benchmark installed
 
-``git clone https://github.com/AnChristos/FindMinimumIndex.git``
+``git clone https://github.com/AnChristos/getB-SIMD.git``
 
 # Also install google benchmark 
 
