@@ -14,7 +14,7 @@ Assuming you want also the google bench mark code
 
 ``cd getB-SIMD/``
 
-The following Will install the benchmark under /user/.local
+The following will install the benchmark under `${HOME}/.local`
 
 ``source buildGoogleBenchmark.sh``
 
