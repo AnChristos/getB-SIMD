@@ -5,7 +5,7 @@ Playground for using SIMD for the magnetic field cache interpolation
 
 ``git clone https://github.com/google/benchmark.git``
 
-The following script from this repo will install the benchmark under ${HOME}/.local
+The following script from this repo will install the benchmark under ``${HOME}/.local``
 
 ``source buildGoogleBenchmark.sh``
 
