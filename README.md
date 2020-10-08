@@ -1,17 +1,15 @@
 # getB-SIMD
 Playground for using SIMD for the magnetic field cache interpolation
 
-# Clone
+# Google benchmark
 
-Assuming you want also the google bench mark code
+``git clone https://github.com/google/benchmark.git``
 
-``git clone --recursive https://github.com/AnChristos/getB-SIMD.git``
-
-``cd getB-SIMD/``
+The following script from this repo will install the benchmark under ${HOME}/.local
 
 ``source buildGoogleBenchmark.sh``
 
-otherwise 
+# Install  getB-SIMD
 
 ``git clone https://github.com/AnChristos/getB-SIMD.git``
 
@@ -23,8 +21,7 @@ otherwise
 
 ``cmake``
 
-
 # Example 
 
-``./get_Bbench --benchmark_report_aggregates_only=true --benchmark_repetitions=20``
+``./getB_bench --benchmark_report_aggregates_only=true --benchmark_repetitions=20``
 
