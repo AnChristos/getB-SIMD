@@ -65,12 +65,6 @@ public:
                double* ATH_RESTRICT B,
                double* ATH_RESTRICT deriv = nullptr) const;
 
-  void getBAutoVec(const double* ATH_RESTRICT xyz,
-                   double r,
-                   double phi,
-                   double* ATH_RESTRICT B,
-                   double* ATH_RESTRICT deriv) const;
-
 private:
   // bin range in z
   double m_zmin = 0.0;
