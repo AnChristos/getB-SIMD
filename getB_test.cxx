@@ -106,7 +106,9 @@ main()
   double phi0 = phi;
   double xyz[3] = { 0, 0, 0 };
   double bxyz[3] = { 0, 0, 0 };
+  double bxyzvec[3] = { 0, 0, 0 };
   double derivatives[9] = { 0 };
+  double derivativesvec[9] = { 0 };
   for (unsigned int i = 0; i < 10; ++i) {
 
     std::cout.precision(dbl::max_digits10);
@@ -115,39 +117,37 @@ main()
     xyz[0] = r1 * cos(phi0);
     xyz[1] = r1 * sin(phi0);
     xyz[2] = z0;
+
     // fill the cache, pass in current scale factor
     BFieldCache cache3d;
     // do interpolation (cache3d has correct scale factor)
     data.zone.getCache(z, r, phi, cache3d, 1);
-
     cache3d.getB(xyz, r1, phi, bxyz, derivatives);
-    std::cout << "get field std: i, bxyz " << i << " " << bxyz[0] << ", "
-              << bxyz[1] << ", " << bxyz[2] << '\n';
-
-    std::cout << "get field std: i, derivatives " << i << " " << derivatives[0]
-              << ", " << derivatives[1] << ", " << derivatives[2] << ", "
-              << derivatives[3] << ", " << derivatives[4] << ", "
-              << derivatives[5] << ", " << derivatives[6] << ", "
-              << derivatives[7] << ", " << derivatives[8] << '\n';
-
 
     // fill the cache, pass in current scale factor
     BFieldCache cache3dVec;
     // do interpolation (cache3d has correct scale factor)
     data.zone.getCacheVec(z, r, phi, cache3dVec, 1);
+    cache3dVec.getBVec(xyz, r1, phi, bxyzvec, derivativesvec);
 
-
-    cache3dVec.getBVec(xyz, r1, phi, bxyz, derivatives);
-    std::cout << "get field vec: i, bxyz " << i << " " << bxyz[0] << ", "
-              << bxyz[1] << ", " << bxyz[2] << '\n';
-
-    std::cout << "get field vec: i, derivatives " << i << " " << derivatives[0]
-              << ", " << derivatives[1] << ", " << derivatives[2] << ", "
-              << derivatives[3] << ", " << derivatives[4] << ", "
-              << derivatives[5] << ", " << derivatives[6] << ", "
-              << derivatives[7] << ", " << derivatives[8] << '\n';
+    for (int j = 0; j < 3; ++j) {
+      if (fabs(bxyz[j] - bxyzvec[j]) > 1e-14) {
+        std::cout << " bxyz[" << j << "] differs " << fabs(bxyz[j] - bxyzvec[j])
+                  << '\n';
+      } else {
+        std::cout << " bxyz[" << j << "] diff " << fabs(bxyz[j] - bxyzvec[j])
+                  << " OK" << '\n';
+      }
+    }
+    for (int j = 0; j < 9; ++j) {
+      if (fabs(derivatives[j] - derivativesvec[j]) > 1e-14) {
+        std::cout << " derivatives[" << j << "] differs " << fabs(derivatives[j] - derivativesvec[j])  <<'\n';
+      } else {
+        std::cout << " derivatives[" << j << "] diff "
+                  << fabs(derivatives[j] - derivativesvec[j]) << " OK" << '\n';
+      }
+    }
   }
-
   return 0;
 }
 
