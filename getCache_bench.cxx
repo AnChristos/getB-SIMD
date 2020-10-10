@@ -104,8 +104,6 @@ getCache(benchmark::State& state)
       BFieldCache cache3d;
       // do interpolation (cache3d has correct scale factor)
       data.zone.getCache(z, r, phi, cache3d, 1);
-
-      benchmark::DoNotOptimize(&cache3d);
     }
   }
 }
@@ -124,7 +122,6 @@ getCacheVec(benchmark::State& state)
       BFieldCache cache3d;
       // do interpolation (cache3d has correct scale factor)
       data.zone.getCacheVec(z, r, phi, cache3d, 1);
-      benchmark::DoNotOptimize(&cache3d);
     }
   }
 }

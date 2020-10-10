@@ -117,9 +117,6 @@ getB(benchmark::State& state)
     const int n = state.range(0);
     for (int range = 0; range < n; ++range) {
       cache3d.getB(xyz, r1, phi, bxyz, derivatives);
-      benchmark::DoNotOptimize(&bxyz);
-      benchmark::DoNotOptimize(&derivatives);
-      benchmark::ClobberMemory();
     }
   }
 }
@@ -151,9 +148,6 @@ getBVec(benchmark::State& state)
     const int n = state.range(0);
     for (int range = 0; range < n; ++range) {
       cache3d.getBVec(xyz, r1, phi, bxyz, derivatives);
-      benchmark::DoNotOptimize(&bxyz);
-      benchmark::DoNotOptimize(&derivatives);
-      benchmark::ClobberMemory();
     }
   }
 }
