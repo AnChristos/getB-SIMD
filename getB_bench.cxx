@@ -102,7 +102,7 @@ getB(benchmark::State& state)
   double phi0 = phi;
   double xyz[3] = { 0, 0, 0 };
   double bxyz[3] = { 0, 0, 0 };
-  double derivatives[9] = { 0 };
+  //double derivatives[9] = { 0 };
 
   double r1 = r0 + 5;
   xyz[0] = r1 * cos(phi0);
@@ -116,7 +116,7 @@ getB(benchmark::State& state)
   for (auto _ : state) {
     const int n = state.range(0);
     for (int range = 0; range < n; ++range) {
-      cache3d.getB(xyz, r1, phi, bxyz, derivatives);
+      cache3d.getB(xyz, r1, phi, bxyz, nullptr);
     }
   }
 }
@@ -133,7 +133,7 @@ getBVec(benchmark::State& state)
   double phi0 = phi;
   double xyz[3] = { 0, 0, 0 };
   double bxyz[3] = { 0, 0, 0 };
-  double derivatives[9] = { 0 };
+  //double derivatives[9] = { 0 };
 
   double r1 = r0 + 5;
   xyz[0] = r1 * cos(phi0);
@@ -147,7 +147,7 @@ getBVec(benchmark::State& state)
   for (auto _ : state) {
     const int n = state.range(0);
     for (int range = 0; range < n; ++range) {
-      cache3d.getBVec(xyz, r1, phi, bxyz, derivatives);
+      cache3d.getBVec(xyz, r1, phi, bxyz, nullptr);
     }
   }
 }
